@@ -36,12 +36,8 @@ enum class PEConfig
     LEATHERWORKING_EXPERIENCE,
     LOCKPICK_ENABLED,
     LOCKPICK_EXPERIENCE,
-    MILLING_ENABLED,
-    MILLING_EXPERIENCE,
     MINING_ENABLED,
     MINING_EXPERIENCE,
-    PROSPECTING_ENABLED,
-    PROSPECTING_EXPERIENCE,
     SKINNING_ENABLED,
     SKINNING_EXPERIENCE,
     SMELTING_ENABLED,
@@ -52,6 +48,12 @@ enum class PEConfig
     MULT_GREEN,
     MULT_YELLOW,
     MULT_ORANGE,
+    MULT_APPRENTICE,
+    MULT_JOURNEYMAN,
+    MULT_EXPERT,
+    MULT_ARTISAN,
+    MULT_MASTER,
+    MULT_GRANDMASTER,
 
     NUM_CONFIGS,
 };
@@ -118,6 +120,14 @@ public:
         SetConfigValue<float>(PEConfig::MULT_GREEN,  "ProfessionExperience.MultGreen",  0.75f, ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
         SetConfigValue<float>(PEConfig::MULT_YELLOW, "ProfessionExperience.MultYellow", 1.0f,  ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
         SetConfigValue<float>(PEConfig::MULT_ORANGE, "ProfessionExperience.MultOrange", 1.25f, ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
+
+        SetConfigValue<float>(PEConfig::MULT_APPRENTICE, "ProfessionExperience.MultApprentice", 1.0f,  ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
+        SetConfigValue<float>(PEConfig::MULT_JOURNEYMAN, "ProfessionExperience.MultJourneyman", 2.0f,  ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
+        SetConfigValue<float>(PEConfig::MULT_EXPERT,     "ProfessionExperience.MultExpert",     3.0f,  ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
+        SetConfigValue<float>(PEConfig::MULT_ARTISAN,    "ProfessionExperience.MultArtisan",    4.0f,  ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
+        SetConfigValue<float>(PEConfig::MULT_MASTER,     "ProfessionExperience.MultMaster",     5.0f,  ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
+        SetConfigValue<float>(PEConfig::MULT_GRANDMASTER,"ProfessionExperience.MultGrandMaster",6.0f,  ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
+
     }
 };
 static PEConfigData peConfigData;
@@ -250,6 +260,19 @@ RewardExperienceScript() : PlayerScript("RewardExperienceScript", {
             xp = xp * peConfigData.GetConfigValue<float>(PEConfig::MULT_YELLOW);
         else
             xp = xp * peConfigData.GetConfigValue<float>(PEConfig::MULT_ORANGE);
+
+        if (gray > 375)
+            xp = xp * peConfigData.GetConfigValue<float>(PEConfig::MULT_GRANDMASTER);
+        else if (gray > 300)
+            xp = xp * peConfigData.GetConfigValue<float>(PEConfig::MULT_MASTER);
+        else if (gray > 225)
+            xp = xp * peConfigData.GetConfigValue<float>(PEConfig::MULT_ARTISAN);
+        else if (gray > 150)
+            xp = xp * peConfigData.GetConfigValue<float>(PEConfig::MULT_EXPERT);
+        else if (gray > 75)
+            xp = xp * peConfigData.GetConfigValue<float>(PEConfig::MULT_JOURNEYMAN);
+        else
+            xp = xp * peConfigData.GetConfigValue<float>(PEConfig::MULT_APPRENTICE);
 
         player->GiveXP(xp, nullptr);
     }
