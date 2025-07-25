@@ -16,6 +16,8 @@ enum class PEConfig
     BLACKSMITH_EXPERIENCE,
     COOKING_ENABLED,
     COOKING_EXPERIENCE,
+    DISENCHANTING_ENABLED,
+    DISENCHANTING_EXPERIENCE,
     ENCHANTING_ENABLED,
     ENCHANTING_EXPERIENCE,
     ENGINEERING_ENABLED,
@@ -46,7 +48,7 @@ enum class PEConfig
     SMELTING_EXPERIENCE,
     TAILORING_ENABLED,
     TAILORING_EXPERIENCE,
-    MULT_GREY,
+    MULT_GRAY,
     MULT_GREEN,
     MULT_YELLOW,
     MULT_ORANGE,
@@ -69,6 +71,9 @@ public:
 
         SetConfigValue<bool>(PEConfig::COOKING_ENABLED,            "ProfessionExperience.Cooking.Enabled",           false);
         SetConfigValue<float>(PEConfig::COOKING_EXPERIENCE,        "ProfessionExperience.Cooking.Experience",        0.01, ConfigValueCache::Reloadable::Yes, [](float const& value) { return value > 0.0f; }, "> 0");
+
+        SetConfigValue<bool>(PEConfig::DISENCHANTING_ENABLED,      "ProfessionExperience.Disenchanting.Enabled",     false);
+        SetConfigValue<float>(PEConfig::DISENCHANTING_EXPERIENCE,  "ProfessionExperience.Disenchanting.Experience",  0.01, ConfigValueCache::Reloadable::Yes, [](float const& value) { return value > 0.0f; }, "> 0");
 
         SetConfigValue<bool>(PEConfig::ENCHANTING_ENABLED,         "ProfessionExperience.Enchanting.Enabled",        false);
         SetConfigValue<float>(PEConfig::ENCHANTING_EXPERIENCE,     "ProfessionExperience.Enchanting.Experience",     0.01, ConfigValueCache::Reloadable::Yes, [](float const& value) { return value > 0.0f; }, "> 0");
@@ -97,14 +102,8 @@ public:
         SetConfigValue<bool>(PEConfig::LOCKPICK_ENABLED,           "ProfessionExperience.Lockpick.Enabled",          false);
         SetConfigValue<float>(PEConfig::LOCKPICK_EXPERIENCE,       "ProfessionExperience.Lockpick.Experience",       0.01, ConfigValueCache::Reloadable::Yes, [](float const& value) { return value > 0.0f; }, "> 0");
 
-        SetConfigValue<bool>(PEConfig::MILLING_ENABLED,            "ProfessionExperience.Milling.Enabled",           false);
-        SetConfigValue<float>(PEConfig::MILLING_EXPERIENCE,        "ProfessionExperience.Milling.Experience",        0.01, ConfigValueCache::Reloadable::Yes, [](float const& value) { return value > 0.0f; }, "> 0");
-
         SetConfigValue<bool>(PEConfig::MINING_ENABLED,             "ProfessionExperience.Mining.Enabled",            true);
         SetConfigValue<float>(PEConfig::MINING_EXPERIENCE,         "ProfessionExperience.Mining.Experience",         0.01, ConfigValueCache::Reloadable::Yes, [](float const& value) { return value > 0.0f; }, "> 0");
-
-        SetConfigValue<bool>(PEConfig::PROSPECTING_ENABLED,        "ProfessionExperience.Prospecting.Enabled",       false);
-        SetConfigValue<float>(PEConfig::PROSPECTING_EXPERIENCE,    "ProfessionExperience.Prospecting.Experience",    0.01, ConfigValueCache::Reloadable::Yes, [](float const& value) { return value > 0.0f; }, "> 0");
 
         SetConfigValue<bool>(PEConfig::SKINNING_ENABLED,           "ProfessionExperience.Skinning.Enabled",          false);
         SetConfigValue<float>(PEConfig::SKINNING_EXPERIENCE,       "ProfessionExperience.Skinning.Experience",       0.01, ConfigValueCache::Reloadable::Yes, [](float const& value) { return value > 0.0f; }, "> 0");
@@ -115,7 +114,7 @@ public:
         SetConfigValue<bool>(PEConfig::TAILORING_ENABLED,          "ProfessionExperience.Tailoring.Enabled",         false);
         SetConfigValue<float>(PEConfig::TAILORING_EXPERIENCE,      "ProfessionExperience.Tailoring.Experience",      0.01, ConfigValueCache::Reloadable::Yes, [](float const& value) { return value > 0.0f; }, "> 0");
 
-        SetConfigValue<float>(PEConfig::MULT_GREY,   "ProfessionExperience.MultGrey",   0.0f,  ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
+        SetConfigValue<float>(PEConfig::MULT_GRAY,   "ProfessionExperience.MultGray",   0.0f,  ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
         SetConfigValue<float>(PEConfig::MULT_GREEN,  "ProfessionExperience.MultGreen",  0.75f, ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
         SetConfigValue<float>(PEConfig::MULT_YELLOW, "ProfessionExperience.MultYellow", 1.0f,  ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
         SetConfigValue<float>(PEConfig::MULT_ORANGE, "ProfessionExperience.MultOrange", 1.25f, ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
@@ -162,14 +161,6 @@ RewardExperienceScript() : PlayerScript("RewardExperienceScript", {
                 enabledSetting = PEConfig::LOCKPICK_ENABLED;
                 experienceSetting = PEConfig::LOCKPICK_EXPERIENCE;
                 break;
-            case SKILL_JEWELCRAFTING:
-                enabledSetting = PEConfig::PROSPECTING_ENABLED;
-                experienceSetting = PEConfig::PROSPECTING_EXPERIENCE;
-                break;
-            case SKILL_INSCRIPTION:
-                enabledSetting = PEConfig::MILLING_ENABLED;
-                experienceSetting = PEConfig::MILLING_EXPERIENCE;
-                break;
             default:
                 return;
         }
@@ -197,8 +188,16 @@ RewardExperienceScript() : PlayerScript("RewardExperienceScript", {
                 experienceSetting = PEConfig::COOKING_EXPERIENCE;
                 break;
             case SKILL_ENCHANTING:
-                enabledSetting = PEConfig::ENCHANTING_ENABLED;
-                experienceSetting = PEConfig::ENCHANTING_EXPERIENCE;
+                if (skill->Spell == 13262)
+                {
+                    enabledSetting = PEConfig::DISENCHANTING_ENABLED;
+                    experienceSetting = PEConfig::DISENCHANTING_EXPERIENCE;
+                }
+                else
+                {
+                    enabledSetting = PEConfig::ENCHANTING_ENABLED;
+                    experienceSetting = PEConfig::ENCHANTING_EXPERIENCE;
+                }
                 break;
             case SKILL_ENGINEERING:
                 enabledSetting = PEConfig::ENGINEERING_ENABLED;
@@ -244,7 +243,7 @@ RewardExperienceScript() : PlayerScript("RewardExperienceScript", {
     {
         uint32 xp = player->GetUInt32Value(PLAYER_NEXT_LEVEL_XP) * xpFraction;
         if (currentLevel >= gray)
-            xp = xp * peConfigData.GetConfigValue<float>(PEConfig::MULT_GREY);
+            xp = xp * peConfigData.GetConfigValue<float>(PEConfig::MULT_GRAY);
         else if (currentLevel >= green)
             xp = xp * peConfigData.GetConfigValue<float>(PEConfig::MULT_GREEN);
         else if (currentLevel >= yellow)
