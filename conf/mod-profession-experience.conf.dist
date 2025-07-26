@@ -48,64 +48,27 @@ ProfessionExperience.MultGrandMaster = 6.0
 
 
 #
-#    ProfessionExperience.*.Enabled
-#        Description: Enable experience gain when crafting or gathering with this profession
-#        Default:     0 - (Disabled, ProfessionExperience.Alchemy.Enabled)
-#                     0 - (Disabled, ProfessionExperience.Blacksmith.Enabled)
-#                     0 - (Disabled, ProfessionExperience.Cooking.Enabled)
-#                     0 - (Disabled, ProfessionExperience.Disenchanting.Enabled)
-#                     0 - (Disabled, ProfessionExperience.Enchanting.Enabled)
-#                     0 - (Disabled, ProfessionExperience.Engineering.Enabled)
-#                     1 - (Enabled,  ProfessionExperience.Fishing.Enabled)
-#                     0 - (Disabled, ProfessionExperience.FirstAid.Enabled)
-#                     1 - (Enabled,  ProfessionExperience.Herbalism.Enabled)
-#                     0 - (Disabled, ProfessionExperience.Inscription.Enabled)
-#                     0 - (Disabled, ProfessionExperience.Jewelcrafting.Enabled)
-#                     0 - (Disabled, ProfessionExperience.Leatherworking.Enabled)
-#                     0 - (Disabled, ProfessionExperience.Lockpick.Enabled)
-#                     1 - (Enabled,  ProfessionExperience.Mining.Enabled)
-#                     0 - (Disabled, ProfessionExperience.Skinning.Enabled)
-#                     0 - (Disabled, ProfessionExperience.Smelting.Enabled)
-#                     0 - (Disabled, ProfessionExperience.Tailoring.Enabled)
-
-ProfessionExperience.Alchemy.Enabled        = 0
-ProfessionExperience.Blacksmith.Enabled     = 0
-ProfessionExperience.Cooking.Enabled        = 0
-ProfessionExperience.Disenchanting.Enabled  = 0
-ProfessionExperience.Enchanting.Enabled     = 0
-ProfessionExperience.Engineering.Enabled    = 0
-ProfessionExperience.Fishing.Enabled        = 1
-ProfessionExperience.FirstAid.Enabled       = 0
-ProfessionExperience.Herbalism.Enabled      = 1
-ProfessionExperience.Inscription.Enabled    = 0
-ProfessionExperience.Jewelcrafting.Enabled  = 0
-ProfessionExperience.Leatherworking.Enabled = 0
-ProfessionExperience.Lockpick.Enabled       = 0
-ProfessionExperience.Mining.Enabled         = 1
-ProfessionExperience.Skinning.Enabled       = 0
-ProfessionExperience.Smelting.Enabled       = 0
-ProfessionExperience.Tailoring.Enabled      = 0
-
-
-#
 #    ProfessionExperience.*.Experience
 #        Description: Part of a level gained for performing the action
-#        Default:     0.01 - (1%, All of them)
+#        Default:     0.01 - (1%, ProfessionExperience.Fishing.Experience)
+#                     0.01 - (1%, ProfessionExperience.Herbalism.Experience)
+#                     0.01 - (1%, ProfessionExperience.Mining.Experience)
+#                     0.00 - (Disabled, the rest)
 
-ProfessionExperience.Alchemy.Experience        = 0.01
-ProfessionExperience.Blacksmith.Experience     = 0.01
-ProfessionExperience.Cooking.Experience        = 0.01
-ProfessionExperience.Disenchanting.Experience  = 0.01
-ProfessionExperience.Enchanting.Experience     = 0.01
-ProfessionExperience.Engineering.Experience    = 0.01
+ProfessionExperience.Alchemy.Experience        = 0.00
+ProfessionExperience.Blacksmith.Experience     = 0.00
+ProfessionExperience.Cooking.Experience        = 0.00
+ProfessionExperience.Disenchanting.Experience  = 0.00
+ProfessionExperience.Enchanting.Experience     = 0.00
+ProfessionExperience.Engineering.Experience    = 0.00
 ProfessionExperience.Fishing.Experience        = 0.01
-ProfessionExperience.FirstAid.Experience       = 0.01
+ProfessionExperience.FirstAid.Experience       = 0.00
 ProfessionExperience.Herbalism.Experience      = 0.01
-ProfessionExperience.Inscription.Experience    = 0.01
-ProfessionExperience.Jewelcrafting.Experience  = 0.01
-ProfessionExperience.Leatherworking.Experience = 0.01
-ProfessionExperience.Lockpick.Experience       = 0.01
+ProfessionExperience.Inscription.Experience    = 0.00
+ProfessionExperience.Jewelcrafting.Experience  = 0.00
+ProfessionExperience.Leatherworking.Experience = 0.00
+ProfessionExperience.Lockpick.Experience       = 0.00
 ProfessionExperience.Mining.Experience         = 0.01
-ProfessionExperience.Skinning.Experience       = 0.01
-ProfessionExperience.Smelting.Experience       = 0.01
-ProfessionExperience.Tailoring.Experience      = 0.01
+ProfessionExperience.Skinning.Experience       = 0.00
+ProfessionExperience.Smelting.Experience       = 0.00
+ProfessionExperience.Tailoring.Experience      = 0.00
