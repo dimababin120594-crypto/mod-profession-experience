@@ -33,18 +33,28 @@ ProfessionExperience.MultOrange = 1.25
 #    ProfessionExperience.MultGrandMaster 376-450
 #        Description: Multiplicator to experience when using a skill in this skill range
 #        Default:     1.0 - (ProfessionExperience.MultApprentice)
-#                     2.0 - (ProfessionExperience.MultJourneyman)
-#                     3.0 - (ProfessionExperience.MultExpert)
-#                     4.0 - (ProfessionExperience.MultArtisan)
-#                     5.0 - (ProfessionExperience.MultMaster)
-#                     6.0 - (ProfessionExperience.MultGrandMaster)
+#                     1.0 - (ProfessionExperience.MultJourneyman)
+#                     1.0 - (ProfessionExperience.MultExpert)
+#                     1.0 - (ProfessionExperience.MultArtisan)
+#                     1.0 - (ProfessionExperience.MultMaster)
+#                     1.0 - (ProfessionExperience.MultGrandMaster)
 
 ProfessionExperience.MultApprentice  = 1.0
-ProfessionExperience.MultJourneyman  = 2.0
-ProfessionExperience.MultExpert      = 3.0
-ProfessionExperience.MultArtisan     = 4.0
-ProfessionExperience.MultMaster      = 5.0
-ProfessionExperience.MultGrandMaster = 6.0
+ProfessionExperience.MultJourneyman  = 1.0
+ProfessionExperience.MultExpert      = 1.0
+ProfessionExperience.MultArtisan     = 1.0
+ProfessionExperience.MultMaster      = 1.0
+ProfessionExperience.MultGrandMaster = 1.0
+
+
+#
+#    ProfessionExperience.MultCurve
+#        Description: Multiplicator to Experience applied as an exponential curve. Formula is "xp x mult ^ (minSkill/450).
+#                     Close to 1 at skill 1. Square root at skill 225. Values below 1.0 apply a penalty at higher level instead.
+#        Default:     5.0
+#        Disabled:    0.0
+
+ProfessionExperience.MultCurve = 5.0
 
 
 #

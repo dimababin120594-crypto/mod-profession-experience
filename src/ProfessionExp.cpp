@@ -37,6 +37,7 @@ enum class PEConfig
     MULT_ARTISAN,
     MULT_MASTER,
     MULT_GRANDMASTER,
+    MULT_CURVE,
 
     NUM_CONFIGS,
 };
@@ -72,11 +73,12 @@ public:
         SetConfigValue<float>(PEConfig::MULT_ORANGE, "ProfessionExperience.MultOrange", 1.25f, ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
 
         SetConfigValue<float>(PEConfig::MULT_APPRENTICE, "ProfessionExperience.MultApprentice", 1.0f,  ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
-        SetConfigValue<float>(PEConfig::MULT_JOURNEYMAN, "ProfessionExperience.MultJourneyman", 2.0f,  ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
-        SetConfigValue<float>(PEConfig::MULT_EXPERT,     "ProfessionExperience.MultExpert",     3.0f,  ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
-        SetConfigValue<float>(PEConfig::MULT_ARTISAN,    "ProfessionExperience.MultArtisan",    4.0f,  ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
-        SetConfigValue<float>(PEConfig::MULT_MASTER,     "ProfessionExperience.MultMaster",     5.0f,  ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
-        SetConfigValue<float>(PEConfig::MULT_GRANDMASTER,"ProfessionExperience.MultGrandMaster",6.0f,  ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
+        SetConfigValue<float>(PEConfig::MULT_JOURNEYMAN, "ProfessionExperience.MultJourneyman", 1.0f,  ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
+        SetConfigValue<float>(PEConfig::MULT_EXPERT,     "ProfessionExperience.MultExpert",     1.0f,  ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
+        SetConfigValue<float>(PEConfig::MULT_ARTISAN,    "ProfessionExperience.MultArtisan",    1.0f,  ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
+        SetConfigValue<float>(PEConfig::MULT_MASTER,     "ProfessionExperience.MultMaster",     1.0f,  ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
+        SetConfigValue<float>(PEConfig::MULT_GRANDMASTER,"ProfessionExperience.MultGrandMaster",1.0f,  ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
+        SetConfigValue<float>(PEConfig::MULT_CURVE,      "ProfessionExperience.MultCurve",      5.0f,  ConfigValueCache::Reloadable::Yes, [](float const& value) { return value >= 0.0f; }, ">= 0");
 
     }
 };
@@ -94,7 +96,7 @@ RewardExperienceScript() : PlayerScript("RewardExperienceScript", {
     bool OnPlayerUpdateFishingSkill(Player* player, int32 skill, int32 zone_skill, int32 /*chance*/, int32 /*roll*/) override
     {
         if (float xpFactor = peConfigData.GetConfigValue<float>(PEConfig::FISHING_EXPERIENCE))
-            RewardXP(player, skill, zone_skill + 100, zone_skill + 50, zone_skill + 25, xpFactor);
+            RewardXP(player, skill, zone_skill + 100, zone_skill + 50, zone_skill + 25, zone_skill, xpFactor);
 
         return true;
     }
@@ -121,7 +123,7 @@ RewardExperienceScript() : PlayerScript("RewardExperienceScript", {
         }
 
         if (float xpFactor = peConfigData.GetConfigValue<float>(experienceSetting))
-            RewardXP(player, currentLevel, gray, green, yellow, xpFactor);
+            RewardXP(player, currentLevel, gray, green, yellow, yellow -25, xpFactor);
     }
 
     void OnPlayerUpdateCraftingSkill(Player *player, SkillLineAbilityEntry const* skill, uint32 currentLevel, uint32& /*gain*/) override
@@ -173,11 +175,12 @@ RewardExperienceScript() : PlayerScript("RewardExperienceScript", {
             uint32 gray = skill->TrivialSkillLineRankHigh;
             uint32 green = (skill->TrivialSkillLineRankHigh + skill->TrivialSkillLineRankLow) / 2;
             uint32 yellow = skill->TrivialSkillLineRankLow;
-            RewardXP(player, currentLevel, gray, green, yellow, xpFactor);
+            uint32 min = skill->MinSkillLineRank;
+            RewardXP(player, currentLevel, gray, green, yellow, min, xpFactor);
         }
     }
 
-    void RewardXP(Player* player, uint32 currentLevel, uint32 gray, uint32 green, uint32 yellow, float xpFraction)
+    void RewardXP(Player* player, uint32 currentLevel, uint32 gray, uint32 green, uint32 yellow, uint32 minSkill, float xpFraction)
     {
         uint32 xp = player->GetUInt32Value(PLAYER_NEXT_LEVEL_XP) * xpFraction;
         if (currentLevel >= gray)
@@ -189,18 +192,21 @@ RewardExperienceScript() : PlayerScript("RewardExperienceScript", {
         else
             xp = xp * peConfigData.GetConfigValue<float>(PEConfig::MULT_ORANGE);
 
-        if (gray > 375)
+        if (minSkill > 375)
             xp = xp * peConfigData.GetConfigValue<float>(PEConfig::MULT_GRANDMASTER);
-        else if (gray > 300)
+        else if (minSkill > 300)
             xp = xp * peConfigData.GetConfigValue<float>(PEConfig::MULT_MASTER);
-        else if (gray > 225)
+        else if (minSkill > 225)
             xp = xp * peConfigData.GetConfigValue<float>(PEConfig::MULT_ARTISAN);
-        else if (gray > 150)
+        else if (minSkill > 150)
             xp = xp * peConfigData.GetConfigValue<float>(PEConfig::MULT_EXPERT);
-        else if (gray > 75)
+        else if (minSkill > 75)
             xp = xp * peConfigData.GetConfigValue<float>(PEConfig::MULT_JOURNEYMAN);
         else
             xp = xp * peConfigData.GetConfigValue<float>(PEConfig::MULT_APPRENTICE);
+
+        if (float curve = peConfigData.GetConfigValue<float>(PEConfig::MULT_CURVE))
+            xp = xp * pow(curve,(minSkill/450));
 
         player->GiveXP(xp, nullptr);
     }
